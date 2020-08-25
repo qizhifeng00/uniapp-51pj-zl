@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		
-		<view class="input-group" v-if="loginType === 0">
+		<view class="input-group">
 			<view class="input-row border">
 				<text class="title">手机：</text>
 				<m-input class="m-input" type="text" clearable focus v-model="mobile" placeholder="请输入手机号码"></m-input>
@@ -14,15 +14,7 @@
 		</view>
 	
 		<view class="btn-row">
-			<button type="primary" class="primary" @tap="bindLogin">登录</button>
-		</view>
-		<view class="oauth-row" v-if="hasProvider" v-bind:style="{top: positionTop + 'px'}">
-			<view class="oauth-image" v-for="provider in providerList" :key="provider.value">
-				<image :src="provider.image" @tap="oauth(provider.value)"></image>
-				<!-- #ifdef MP-WEIXIN -->
-				<button v-if="!isDevtools" open-type="getUserInfo" @getuserinfo="getUserInfo"></button>
-				<!-- #endif -->
-			</view>
+			<button type="primary" class="primary" @click="loginBySms">登录</button>
 		</view>
 	</view>
 </template>
@@ -40,14 +32,8 @@
 		}, 
 		data() {
 			return {
-				loginType: 0,
-				loginTypeList: ['免密登录', '密码登录'],
-				mobile: '',
-				code: '',
-				providerList: [],
-				hasProvider: false,
-				username: '',
-				password: '',
+				mobile: '',//手机号
+				code: '',//code
 				positionTop: 0,
 				isDevtools: false,
 				codeDuration: 0
@@ -56,28 +42,7 @@
 		computed: mapState(['forcedLogin']),
 		methods: {
 			...mapMutations(['login']),
-			initProvider() {
-				const filters = ['weixin', 'qq', 'sinaweibo'];
-				uni.getProvider({
-					service: 'oauth',
-					success: (res) => {
-						if (res.provider && res.provider.length) {
-							for (let i = 0; i < res.provider.length; i++) {
-								if (~filters.indexOf(res.provider[i])) {
-									this.providerList.push({
-										value: res.provider[i],
-										image: '../../static/img/' + res.provider[i] + '.png'
-									});
-								}
-							}
-							this.hasProvider = true;
-						}
-					},
-					fail: (err) => {
-						console.error('获取服务供应商失败：' + JSON.stringify(err));
-					}
-				});
-			},
+			
 			initPosition() {
 				/**
 				 * 使用 absolute 定位，并且设置 bottom 值进行定位。软键盘弹出时，底部会因为窗口变化而被顶上来。
@@ -98,104 +63,23 @@
 						showCancel: false
 					})
 					return
-				}
-				uniCloud.callFunction({
-					name: 'user-center',
-					data: {
-						action: 'sendSmsCode',
-						params: {
-							mobile: this.mobile
-						}
-					},
-					success: (e) => {
-						if (e.result.code == 0) {
-							uni.showModal({
-								content: '验证码发送成功，请注意查收',
-								showCancel: false
-							})
-							this.codeDuration = 60
-							this.codeInterVal = setInterval(() => {
-								this.codeDuration--
-								if (this.codeDuration === 0) {
-									if (this.codeInterVal) {
-										clearInterval(this.codeInterVal)
-										this.codeInterVal = null
-									}
-								}
-							}, 1000)
-						} else {
-							uni.showModal({
-								content: '验证码发送失败：' + e.result.msg,
-								showCancel: false
-							})
-						}
-
-					},
-					fail(e) {
-						uni.showModal({
-							content: '验证码发送失败',
-							showCancel: false
-						})
-					}
-				})
-			},
-			loginByPwd() {
-				/**
-				 * 客户端对账号信息进行一些必要的校验。
-				 * 实际开发中，根据业务需要进行处理，这里仅做示例。
-				 */
-				if (this.username.length < 3) {
-					uni.showToast({
-						icon: 'none',
-						title: '账号最短为 3 个字符'
-					});
-					return;
-				}
-				if (this.password.length < 6) {
-					uni.showToast({
-						icon: 'none',
-						title: '密码最短为 6 个字符'
-					});
-					return;
-				}
-				const data = {
-					username: this.username,
-					password: this.password
-				};
-				let _self = this;
-
-				uniCloud.callFunction({
-					name: 'user-center',
-					data: {
-						action: 'login',
-						params: data
-					},
-					success: (e) => {
-
-						console.log('login success', e);
-
-						if (e.result.code == 0) {
-							uni.setStorageSync('uniIdToken', e.result.token)
-							uni.setStorageSync('username', e.result.username)
-							uni.setStorageSync('login_type', 'online')
-							_self.toMain(_self.username);
-						} else {
-							uni.showModal({
-								content: e.result.msg,
-								showCancel: false
-							})
-							console.log('登录失败', e);
-						}
-
-					},
-					fail(e) {
-						uni.showModal({
-							content: JSON.stringify(e),
-							showCancel: false
-						})
-					}
-				})
-			},
+                }
+                uni.request({
+                    url:"www.51pj.app/sms?method=send.member.verify",
+                    data: {
+       	 text: 'uni.request'	
+    },
+    header: {
+        'custom-header': 'hello' //自定义请求头信息
+    }, 
+    success: (res) => {
+        console.log(res.data);
+        this.text = 'request success';
+    }
+                    
+                })
+				
+			},	
 			loginBySms() {
 				if (!/^1\d{10}$/.test(this.mobile)) {
 					uni.showModal({
@@ -248,18 +132,6 @@
 						})
 					}
 				})
-			},
-			bindLogin() {
-				switch (this.loginType) {
-					case 0:
-						this.loginBySms()
-						break;
-					case 1:
-						this.loginByPwd()
-						break;
-					default:
-						break;
-				}
 			},
 			oauth(value) {
 				uni.showModal({
@@ -328,7 +200,6 @@
 		},
 		onReady() {
 			this.initPosition();
-			this.initProvider();
 			// #ifdef MP-WEIXIN
 			this.isDevtools = uni.getSystemInfoSync().platform === 'devtools';
 			// #endif
