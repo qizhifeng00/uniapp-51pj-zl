@@ -1,12 +1,12 @@
 # uniapp-51pj-zl
 uniapp 专猎驾驶员市场
 
-## 依赖包安装
+## 安装
 ```
 npm install
 ```
 
-### 编译热重载运行
+### 运行 默认:H5
 ```
 npm run serve
 ```
