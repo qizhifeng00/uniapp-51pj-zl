@@ -20,7 +20,7 @@ export default async (url = '', data = {}, method = 'GET', token = false) => {
             url = url + '?' + dataStr;
         }
     }
-
+    console.log(url)
     let requestConfig = {
         headers: {
             'Accept': 'application/json',
@@ -28,7 +28,7 @@ export default async (url = '', data = {}, method = 'GET', token = false) => {
             'Authorization': 'Bearer ' + token_key
         },
     }
-
+    console.log(requestConfig)
     if (token == true) {
         uni.getStorage({
             key: 'storage_key',
@@ -36,17 +36,17 @@ export default async (url = '', data = {}, method = 'GET', token = false) => {
                 token_key = res.data
             }
         });
+
     }
 
-
     return new Promise((resolve, reject) => {
-        console.log(requestConfig)
         uni.request({
             url,
             method,
             data: JSON.stringify(data),
             requestConfig,
             success: (res) => {
+                console.log(res)
                 resolve(res)
                 reject(res)
             },

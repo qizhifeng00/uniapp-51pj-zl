@@ -3,25 +3,16 @@
     <view class="input-group">
       <view class="input-row border">
         <text class="title">手机：</text>
-        <m-input
-          class="m-input"
-          type="text"
-          clearable
-          focus
-          v-model="mobile"
-          placeholder="请输入手机号码"
-        ></m-input>
+        <m-input class="m-input" type="text" clearable focus v-model="mobile" placeholder="请输入手机号码"></m-input>
       </view>
       <view class="input-row">
         <text class="title">验证码：</text>
-        <m-input
-          type="text"
-          v-model="code"
-          placeholder="请输入验证码"
-        ></m-input>
-        <view class="send-code-btn" @click="sendSmsCode">{{
+        <m-input type="text" v-model="code" placeholder="请输入验证码"></m-input>
+        <view class="send-code-btn" @click="sendSmsCode">
+          {{
           codeDuration ? codeDuration + "s" : "发送验证码"
-        }}</view>
+          }}
+        </view>
       </view>
     </view>
 
@@ -43,7 +34,7 @@ export default {
   data() {
     return {
       mobile: "", //手机号
-      code: "", //code
+      code: "", //验证码
       positionTop: 0,
       isDevtools: false,
       codeDuration: 0,
@@ -68,6 +59,7 @@ export default {
           showCancel: false,
         });
       }
+
       if (!/^1\d{10}$/.test(this.mobile)) {
         uni.showModal({
           content: "手机号码填写错误",
@@ -164,4 +156,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>
