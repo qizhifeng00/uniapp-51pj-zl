@@ -1,4 +1,11 @@
 {
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+
   "pages": [
     {
       "path": "pages/index/index",
@@ -28,6 +35,36 @@
       "path": "pages/recruitDetail/recruitDetail",
       "style": {
         "navigationBarTitleText": "招聘详情"
+      }
+    },
+    {
+      "path": "pages/conpon/conpon",
+      "style": {
+        "navigationBarTitleText": "签到"
+      }
+    },
+    {
+      "path": "pages/invite/invite",
+      "style": {
+        "navigationBarTitleText": "邀请"
+      }
+    },
+    {
+      "path": "pages/point/point",
+      "style": {
+        "navigationBarTitleText": "积分记录"
+      }
+    },
+    {
+      "path": "pages/qiandao/qiandao",
+      "style": {
+        "navigationBarTitleText": "签到"
+      }
+    },
+    {
+      "path": "pages/recharge/recharge",
+      "style": {
+        "navigationBarTitleText": "充值"
       }
     }
   ],

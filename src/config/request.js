@@ -39,7 +39,7 @@ export default async (url = '', data = {}, method = 'GET', token = false) => {
 
     }
 
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
         uni.request({
             url,
             method,
