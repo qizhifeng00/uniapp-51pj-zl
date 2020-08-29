@@ -1,18 +1,18 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 export default {
-  onLaunch: function() {
+  onLaunch: function () {
     //全局读取token、username
-    let uniIdToken = uni.getStorageSync("uniIdToken");
-    if (uniIdToken) {
-      this.login(uni.getStorageSync("username"));
+    let token = uni.getStorageSync("token");
+    if (token) {
+      this.login(token);
     }
     console.log("App Launch");
   },
-  onShow: function() {
+  onShow: function () {
     console.log("App Show");
   },
-  onHide: function() {
+  onHide: function () {
     console.log("App Hide");
   },
   methods: {
@@ -24,8 +24,13 @@ export default {
 <style lang="scss">
 /*每个页面公共css */
 @import "./common/uni.css";
+html {
+  background-color: #fff;
+}
+
 page {
-  background-color: #f4f5f6;
+  margin: 50px 0;
+  background-color: #fff;
   height: 100%;
   font-size: 28rpx;
   line-height: 1.8;

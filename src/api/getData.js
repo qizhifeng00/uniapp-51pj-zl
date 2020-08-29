@@ -6,6 +6,9 @@ export const sendSms = data => request('/sms?method=send.member.verify', data, "
 //登录 :{mobile,code}
 export const login = data => request('/token?method=member.sms', data, "POST");
 
+//获取我的信息
+export const getAdminData = token => request('/me?method=account', {}, "GET", token)
+
 //获取招聘列表
 export const getRecruitList = () => request('/data?method=d1.list')
 

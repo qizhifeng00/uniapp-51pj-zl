@@ -128,7 +128,9 @@ export default {
       loginData.then((data) => {
         console.log(data);
         if (data.statusCode == 201) {
-          uni.setStorageSync("token", data.data.data.token);
+          const token = data.data.data.token;
+          uni.setStorageSync("token", token);
+          this.toMain(token);
           uni.showModal({
             content: "登录成功",
             showCancel: false,
@@ -144,6 +146,21 @@ export default {
           console.log("登录失败");
         }
       });
+    },
+    toMain(token) {
+      console.logtoken;
+      this.login(token);
+      /**
+       * 强制登录时使用reLaunch方式跳转过来
+       * 返回首页也使用reLaunch方式
+       */
+      if (this.forcedLogin) {
+        uni.reLaunch({
+          url: "../index/index",
+        });
+      } else {
+        uni.navigateBack();
+      }
     },
   },
 
